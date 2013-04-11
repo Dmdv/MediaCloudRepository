@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="MediaCloudRepository" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2012-10.1.8">
+  <Role name="MediaRepositoryWebRole">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="DeviceTable" value="DeviceTable" />
+      <Setting name="UserTable" value="UserTable" />
+      <Setting name="MediaTable" value="MediaTable" />
+      <Setting name="QueryHistory" value="QueryHistory" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="" />
+    </ConfigurationSettings>
+  </Role>
+</ServiceConfiguration>

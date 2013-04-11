@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5A382DA3-4575-48BA-8BCA-E5CDFD4FB82A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DataAccess</RootNamespace>
+    <AssemblyName>DataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.WindowsAzure.StorageClient, Version=1.7.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\ref\Microsoft.WindowsAzure.StorageClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessLogic\DeviceManager.cs" />
+    <Compile Include="BusinessLogic\MediaManager.cs" />
+    <Compile Include="BusinessLogic\UserManager.cs" />
+    <Compile Include="Entities\MediaSize.cs" />
+    <Compile Include="Exceptions\BlobContainerCreateException.cs" />
+    <Compile Include="Exceptions\DalException.cs" />
+    <Compile Include="Exceptions\DeviceAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\DeviceNotFoundException.cs" />
+    <Compile Include="Exceptions\IExceptionShield.cs" />
+    <Compile Include="Exceptions\MediaAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\UserAlreadyExistsException.cs" />
+    <Compile Include="Exceptions\UserNotFoundException.cs" />
+    <Compile Include="Extensions\FormattableExtensions.cs" />
+    <Compile Include="Helpers\AsyncEnumerableToAsyncTransformer.cs" />
+    <Compile Include="Helpers\DateTimeSerializer.cs" />
+    <Compile Include="Repository\Batch.cs" />
+    <Compile Include="Exceptions\BatchDuplicateEntityException.cs" />
+    <Compile Include="Exceptions\ContractViolationException.cs" />
+    <Compile Include="Entities\Device.cs" />
+    <Compile Include="Exceptions\EntityAlreadyExistsException.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Exceptions\ExceptionHandling.cs" />
+    <Compile Include="Exceptions\ExceptionParser.cs" />
+    <Compile Include="Helpers\GenericAsyncEnumerable.cs" />
+    <Compile Include="Helpers\GenericAsyncEnumerator.cs" />
+    <Compile Include="Repository\BlobRepository.cs" />
+    <Compile Include="Repository\DeviceRepository.cs" />
+    <Compile Include="Repository\GenericTableStorageProvider.cs" />
+    <Compile Include="Helpers\Guard.cs" />
+    <Compile Include="Helpers\IAsyncEnumerable.cs" />
+    <Compile Include="Helpers\IAsyncEnumerator.cs" />
+    <Compile Include="Exceptions\InvariantViolationException.cs" />
+    <Compile Include="Events\IStorageEvent.cs" />
+    <Compile Include="Repository\IBlobRepository.cs" />
+    <Compile Include="Repository\IDeviceRepository.cs" />
+    <Compile Include="Repository\IMediaRepository.cs" />
+    <Compile Include="Repository\IQueryRepository.cs" />
+    <Compile Include="Repository\ITableStorageProvider.cs" />
+    <Compile Include="Entities\MediaFile.cs" />
+    <Compile Include="Entities\MediaType.cs" />
+    <Compile Include="Entities\QueryHistory.cs" />
+    <Compile Include="Helpers\Retry.cs" />
+    <Compile Include="Helpers\RetryPolicies.cs" />
+    <Compile Include="Exceptions\StorageDataAccessException.cs" />
+    <Compile Include="Events\StorageOperationExceptionEvent.cs" />
+    <Compile Include="Events\StorageOperationRetriedEvent.cs" />
+    <Compile Include="Events\StorageOperationSucceededEvent.cs" />
+    <Compile Include="Repository\IUserRepository.cs" />
+    <Compile Include="Repository\MediaRepository.cs" />
+    <Compile Include="Repository\QueryRepository.cs" />
+    <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="Repository\StorageOperationType.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Repository\TableStorageProviderBase.cs" />
+    <Compile Include="Extensions\TableStorageProviderExtensions.cs" />
+    <Compile Include="Exceptions\TaskExtensions.cs" />
+    <Compile Include="Helpers\TaskHelpers.cs" />
+    <Compile Include="Entities\User.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
