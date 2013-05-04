@@ -1,6 +1,7 @@
 ﻿using MediaRepositoryWebRole;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace DataAccess.Test
 {
@@ -16,10 +17,17 @@ namespace DataAccess.Test
 		private static void InitializeTables(CloudStorageAccount account)
 		{
 			var tableClient = account.CreateCloudTableClient();
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.DeviceTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.UserTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.MediaTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.QueryHistory);
+
+			CreateTableIfNotExists(tableClient, ServiceFactory.ServiceSettings.DeviceTable);
+			CreateTableIfNotExists(tableClient, ServiceFactory.ServiceSettings.UserTable);
+			CreateTableIfNotExists(tableClient, ServiceFactory.ServiceSettings.MediaTable);
+			CreateTableIfNotExists(tableClient, ServiceFactory.ServiceSettings.QueryHistory);
+		}
+
+		private static void CreateTableIfNotExists(CloudTableClient tableClient, string tableName)
+		{
+			var tableReference = tableClient.GetTableReference(tableName);
+			tableReference.CreateIfNotExists();
 		}
 	}
 }

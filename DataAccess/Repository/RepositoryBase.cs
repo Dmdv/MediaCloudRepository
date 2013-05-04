@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DataAccess.Extensions;
 using DataAccess.Helpers;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage.Table.DataServices;
 
 namespace DataAccess.Repository
 {

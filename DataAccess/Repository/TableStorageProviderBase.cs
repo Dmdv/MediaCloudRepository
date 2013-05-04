@@ -8,8 +8,8 @@ using System.Web;
 using DataAccess.Exceptions;
 using DataAccess.Extensions;
 using DataAccess.Helpers;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table.DataServices;
 using RetryPolicies = DataAccess.Helpers.RetryPolicies;
 
 namespace DataAccess.Repository

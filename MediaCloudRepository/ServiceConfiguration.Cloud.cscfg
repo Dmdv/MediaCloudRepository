@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceConfiguration serviceName="MediaCloudRepository" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="3" osVersion="*" schemaVersion="2012-10.1.8">
   <Role name="MediaRepositoryWebRole">
     <Instances count="1" />
@@ -9,6 +9,6 @@
       <Setting name="MediaTable" value="MediaTable" />
       <Setting name="QueryHistory" value="QueryHistory" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="" />
-    </ConfigurationSettings>
+    <Setting name="Microsoft.WindowsAzure.Plugins.Caching.ClientDiagnosticLevel" value="1" /></ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

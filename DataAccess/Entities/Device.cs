@@ -1,6 +1,6 @@
 ﻿using System;
 using DataAccess.Extensions;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage.Table.DataServices;
 
 namespace DataAccess.Entities
 {

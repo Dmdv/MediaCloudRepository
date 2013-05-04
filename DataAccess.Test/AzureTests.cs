@@ -9,7 +9,7 @@ using DataAccess.Helpers;
 using DataAccess.Repository;
 using MediaRepositoryWebRole;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage.Blob;
 using DataAccess.Extensions;
 using User = DataAccess.Entities.User;
 

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Services.Client;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table.DataServices;
+using Microsoft.WindowsAzure.Storage.Table.Protocol;
 using RetryPolicies = DataAccess.Helpers.RetryPolicies;
 
 namespace DataAccess.Exceptions
@@ -11,7 +13,7 @@ namespace DataAccess.Exceptions
 		{
 			var errorCode = "N/A";
 
-			var serverException = exception as StorageServerException;
+			var serverException = exception as StorageException;
 			if (serverException != null)
 			{
 				errorCode = serverException.ErrorCode.ToString();

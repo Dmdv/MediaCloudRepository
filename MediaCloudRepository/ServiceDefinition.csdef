@@ -7,7 +7,7 @@
       <Setting name="MediaTable" />
       <Setting name="QueryHistory" />
       <Setting name="ConnectionString" />
-    </ConfigurationSettings>
+    <Setting name="Microsoft.WindowsAzure.Plugins.Caching.ClientDiagnosticLevel" /></ConfigurationSettings>
     <Sites>
       <Site name="Web">
         <Bindings>
@@ -21,5 +21,5 @@
     <Imports>
       <Import moduleName="Diagnostics" />
     </Imports>
-  </WebRole>
+  <Startup priority="-2"><Task commandLine="Microsoft.WindowsAzure.Caching\ClientPerfCountersInstaller.exe install" executionContext="elevated" taskType="simple" /></Startup></WebRole>
 </ServiceDefinition>
