@@ -4,12 +4,32 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using DataAccess.Exceptions;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Queue.Protocol;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
+using Microsoft.WindowsAzure.Storage.Shared.Protocol;
+using Microsoft.WindowsAzure.Storage.Table.Protocol;
 
 namespace DataAccess.Helpers
 {
+	public class OptimisticConcurrencyRetry : IRetryPolicy
+	{
+		private RetryPolicies _policies;
+
+		public IRetryPolicy CreateInstance()
+		{
+			_policies = new RetryPolicies();
+		}
+
+		public bool ShouldRetry(int currentRetryCount, int statusCode, Exception lastException, out TimeSpan retryInterval,
+		                        OperationContext operationContext)
+		{
+			return _policies.OptimisticConcurrency()
+		}
+	}
+
 	/// <summary>
-	/// 	Azure retry policies for corner-situation and server errors.
+	/// Azure retry policies for corner-situation and server errors.
 	/// </summary>
 	public class RetryPolicies
 	{
@@ -18,7 +38,7 @@ namespace DataAccess.Helpers
 		}
 
 		/// <summary>
-		/// 	Retry policy for optimistic concurrency retrials.
+		/// Retry policy for optimistic concurrency retrials.
 		/// </summary>
 		public ShouldRetry OptimisticConcurrency()
 		{
@@ -60,7 +80,7 @@ namespace DataAccess.Helpers
 		}
 
 		/// <summary>
-		/// 	Similar to <see cref="TransientServerErrorBackOff" /> , yet the Table Storage comes with its own set or exceptions/.
+		/// Similar to <see cref="TransientServerErrorBackOff" /> , yet the Table Storage comes with its own set or exceptions/.
 		/// </summary>
 		public ShouldRetry TransientTableErrorBackOff()
 		{
@@ -82,7 +102,7 @@ namespace DataAccess.Helpers
 		}
 
 		/// <summary>
-		/// 	Very patient retry policy to deal with container, queue or table instantiation that happens just after a deletion.
+		/// Very patient retry policy to deal with container, queue or table instantiation that happens just after a deletion.
 		/// </summary>
 		public ShouldRetry SlowInstantiation()
 		{
@@ -101,7 +121,7 @@ namespace DataAccess.Helpers
 		}
 
 		/// <summary>
-		/// 	Limited retry related to MD5 validation failure.
+		/// Limited retry related to MD5 validation failure.
 		/// </summary>
 		public ShouldRetry NetworkCorruption()
 		{
@@ -120,7 +140,7 @@ namespace DataAccess.Helpers
 		}
 
 		/// <summary>
-		/// 	Hack around lack of proper way of retrieving the error code through a property.
+		/// Hack around lack of proper way of retrieving the error code through a property.
 		/// </summary>
 		public static string GetErrorCode(DataServiceRequestException ex)
 		{
@@ -135,7 +155,7 @@ namespace DataAccess.Helpers
 		// HACK: just duplicating the other overload of 'GetErrorCode'
 
 		/// <summary>
-		/// 	Hack around lack of proper way of retrieving the error code through a property.
+		/// Hack around lack of proper way of retrieving the error code through a property.
 		/// </summary>
 		public static string GetErrorCode(DataServiceQueryException ex)
 		{
@@ -216,7 +236,7 @@ namespace DataAccess.Helpers
 
 		private static bool TransientTableErrorExceptionFilter(Exception exception)
 		{
-			var storageClientException = exception as StorageClientException;
+			var storageClientException = exception as StorageException;
 			if (storageClientException != null)
 			{
 				// случай когда лезем через проксю, и ответа никакого нет
@@ -299,7 +319,7 @@ namespace DataAccess.Helpers
 
 		private static bool SlowInstantiationExceptionFilter(Exception exception)
 		{
-			var storageException = exception as StorageClientException;
+			var storageException = exception as StorageException;
 
 			// Blob Storage or Queue Storage exceptions
 			// Table Storage may throw exception of type 'StorageClientException'
@@ -348,7 +368,7 @@ namespace DataAccess.Helpers
 		private static bool NetworkCorruptionExceptionFilter(Exception exception)
 		{
 			// Upload MD5 mismatch
-			var clientException = exception as StorageClientException;
+			var clientException = exception as StorageException;
 			if (clientException != null
 			    && clientException.ErrorCode == StorageErrorCode.BadRequest
 			    && clientException.ExtendedErrorInformation != null
