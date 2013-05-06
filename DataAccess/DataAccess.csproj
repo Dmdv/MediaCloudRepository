@@ -99,6 +99,7 @@
     <Compile Include="Exceptions\MediaAlreadyExistsException.cs" />
     <Compile Include="Exceptions\UserAlreadyExistsException.cs" />
     <Compile Include="Exceptions\UserNotFoundException.cs" />
+    <Compile Include="Extensions\CloudTableClientExtension.cs" />
     <Compile Include="Extensions\FormattableExtensions.cs" />
     <Compile Include="Helpers\AsyncEnumerableToAsyncTransformer.cs" />
     <Compile Include="Helpers\DateTimeSerializer.cs" />

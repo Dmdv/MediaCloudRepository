@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+﻿using DataAccess.Extensions;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 
 namespace DataAccessInit
 {
@@ -21,26 +21,15 @@ namespace DataAccessInit
 		{
 			var tableClient = account.CreateCloudTableClient();
 
-			DeleteTableAsync(tableClient, ServiceFactory.ServiceSettings.DeviceTable);
-			DeleteTableAsync(tableClient, ServiceFactory.ServiceSettings.UserTable);
-			DeleteTableAsync(tableClient, ServiceFactory.ServiceSettings.MediaTable);
-			DeleteTableAsync(tableClient, ServiceFactory.ServiceSettings.QueryHistory);
+			tableClient.DeleteTableAsync(ServiceFactory.ServiceSettings.DeviceTable);
+			tableClient.DeleteTableAsync(ServiceFactory.ServiceSettings.UserTable);
+			tableClient.DeleteTableAsync(ServiceFactory.ServiceSettings.MediaTable);
+			tableClient.DeleteTableAsync(ServiceFactory.ServiceSettings.QueryHistory);
 
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.DeviceTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.UserTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.MediaTable);
-			tableClient.CreateTableIfNotExist(ServiceFactory.ServiceSettings.QueryHistory);
-		}
-
-		private static void DeleteTableAsync(CloudTableClient tableClient, string tableName)
-		{
-			if (tableClient.DoesTableExist(tableName))
-			{
-				Task.Factory.FromAsync(
-					tableClient.BeginDeleteTable,
-					tableClient.EndDeleteTable,
-					tableName, null).Wait();
-			}
+			tableClient.CreateTableIfNotExists(ServiceFactory.ServiceSettings.DeviceTable);
+			tableClient.CreateTableIfNotExists(ServiceFactory.ServiceSettings.UserTable);
+			tableClient.CreateTableIfNotExists(ServiceFactory.ServiceSettings.MediaTable);
+			tableClient.CreateTableIfNotExists(ServiceFactory.ServiceSettings.QueryHistory);
 		}
 	}
 }

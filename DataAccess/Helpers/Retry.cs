@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
 using TaskExtensions = DataAccess.Exceptions.TaskExtensions;
 
 namespace DataAccess.Helpers
@@ -45,7 +45,6 @@ namespace DataAccess.Helpers
 					                            taskGetter()
 						                            .ContinueWith(x =>
 						                                          TaskRetry(taskCompletionSource, taskGetter, x, cancellationToken, policy, retryCount)));
-
 					return;
 				}
 

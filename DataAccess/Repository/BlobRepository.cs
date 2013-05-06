@@ -2,14 +2,11 @@
 using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace DataAccess.Repository
 {
-	/// <summary>
-	/// 
-	/// </summary>
 	public class BlobRepository : IBlobRepository
 	{
 		private readonly CloudBlobClient _blobClient;
@@ -20,13 +17,6 @@ namespace DataAccess.Repository
 			_blobClient = storageAccount.CreateCloudBlobClient();
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="containerName"></param>
-		/// <param name="fileName"></param>
-		/// <param name="stream"></param>
-		/// <returns></returns>
 		public Task SaveBlob(string containerName, string fileName, Stream stream)
 		{
 			CloudBlob cloudBlob = null;
@@ -41,7 +31,7 @@ namespace DataAccess.Repository
 				cloudBlob = CreateBlob(fileName, blobContainer);
 				return Task.Factory.FromAsync(cloudBlob.BeginUploadFromStream, cloudBlob.EndUploadFromStream, stream, null);
 			}
-			catch (StorageClientException exception)
+			catch (StorageException exception)
 			{
 				if (cloudBlob != null)
 				{

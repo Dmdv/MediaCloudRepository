@@ -9,7 +9,7 @@ using MediaRepositoryWebRole;
 using MediaRepositoryWebRole.Contracts;
 using MediaRepositoryWebRole.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.WindowsAzure.StorageClient;
+using Microsoft.WindowsAzure.Storage.Blob;
 using DataAccess.Test.Extensions;
 using User = MediaRepositoryWebRole.Data.User;
 

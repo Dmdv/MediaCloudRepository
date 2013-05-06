@@ -9,6 +9,7 @@ using DataAccess.Exceptions;
 using DataAccess.Extensions;
 using DataAccess.Helpers;
 using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage.Table.DataServices;
 using RetryPolicies = DataAccess.Helpers.RetryPolicies;
 

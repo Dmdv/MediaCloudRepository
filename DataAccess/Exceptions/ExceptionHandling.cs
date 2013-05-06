@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Services.Client;
+using System.Globalization;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table.DataServices;
 using Microsoft.WindowsAzure.Storage.Table.Protocol;
@@ -16,7 +17,9 @@ namespace DataAccess.Exceptions
 			var serverException = exception as StorageException;
 			if (serverException != null)
 			{
-				errorCode = serverException.ErrorCode.ToString();
+				errorCode = serverException.RequestInformation.ExtendedErrorInformation != null
+					            ? serverException.RequestInformation.ExtendedErrorInformation.ErrorCode
+					            : serverException.RequestInformation.HttpStatusCode.ToString(CultureInfo.InvariantCulture);
 			}
 
 			var dataServiceRequestException = exception as DataServiceRequestException;
