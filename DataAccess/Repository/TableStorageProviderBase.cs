@@ -11,7 +11,8 @@ using DataAccess.Helpers;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage.Table.DataServices;
-using RetryPolicies = DataAccess.Helpers.RetryPolicies;
+// using RetryPolicies = DataAccess.Helpers.RetryPolicies;
+using Microsoft.WindowsAzure.Storage.RetryPolicies;
 
 namespace DataAccess.Repository
 {
@@ -56,7 +57,6 @@ namespace DataAccess.Repository
 			DataServiceResponse serviceResponse = null;
 			try
 			{
-				var rp = new RetryPolicies();
 				serviceResponse = await Retry.Do(
 					() =>
 					Task<DataServiceResponse>.Factory.FromAsync(
@@ -64,7 +64,7 @@ namespace DataAccess.Repository
 						context.EndSaveChanges,
 						SaveChangesOptions.Batch | SaveChangesOptions.ReplaceOnUpdate,
 						null),
-					rp.TransientTableErrorBackOff,
+					new LinearRetry(),
 					CancellationToken.None);
 			}
 			catch (Exception e)
@@ -261,8 +261,6 @@ namespace DataAccess.Repository
 		{
 			ResultSegment<TPersistentEntity> resultSegment = null;
 
-			var rp = new RetryPolicies();
-
 			return new GenericAsyncEnumerable<IEnumerable<TPersistentEntity>>(
 				() => new GenericAsyncEnumerator<IEnumerable<TPersistentEntity>>(
 					      moveNext: cancellationToken =>
@@ -278,7 +276,7 @@ namespace DataAccess.Repository
 										                tableQuery.EndExecuteSegmented,
 										                (ResultContinuation)null,
 										                null),
-									                rp.TransientTableErrorBackOff,
+									                new LinearRetry(),
 									                CancellationToken.None);
 							                }
 							                else
@@ -292,7 +290,7 @@ namespace DataAccess.Repository
 								                task = Retry.Do(
 									                () => Task<ResultSegment<TPersistentEntity>>.Factory.FromAsync(
 										                resultSegment.BeginGetNext, resultSegment.EndGetNext, null),
-									                rp.TransientTableErrorBackOff,
+													new LinearRetry(),
 									                CancellationToken.None);
 								                // ReSharper restore AccessToModifiedClosure
 							                }
