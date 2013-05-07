@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Specialized;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage;
@@ -70,7 +69,6 @@ namespace DataAccess.Repository
 			{
 				var perm = new BlobContainerPermissions {PublicAccess = BlobContainerPublicAccessType.Blob};
 				container.SetPermissions(perm);
-				container.Metadata.Add(new NameValueCollection());
 			}
 
 			return container;

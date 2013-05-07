@@ -32,7 +32,7 @@ namespace DataAccess.Repository
 		{
 			Guard.CheckNotNull(batch, "batch");
 
-			var context = _tableAccount.GetDataServiceContext();
+			var context = _tableAccount.GetTableServiceContext();
 
 			if (batch.Delete != null && batch.Delete.Count != 0)
 			{
@@ -124,7 +124,7 @@ namespace DataAccess.Repository
 		{
 			Guard.CheckNotNull(filter, "filter");
 
-			var context = _tableAccount.GetDataServiceContext();
+			var context = _tableAccount.GetTableServiceContext();
 			var query = CreateQueryForGetList(context, new Dictionary<string, string> {{"$filter", filter}});
 			var asyncList = GetListInternal(query);
 
@@ -177,7 +177,7 @@ namespace DataAccess.Repository
 
 		private bool IsExistInternal(string filter)
 		{
-			var context = _tableAccount.GetDataServiceContext();
+			var context = _tableAccount.GetTableServiceContext();
 			var query = CreateQueryForGetList(context, new Dictionary<string, string> {{"$filter", filter}});
 			return query.FirstOrDefault() != null;
 		}
