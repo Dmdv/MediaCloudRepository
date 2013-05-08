@@ -168,11 +168,11 @@ namespace DataAccess.Repository
 				}));
 		}
 
-		private CloudTableQuery<TPersistentEntity> CreateQueryForGetList(TableServiceContext context, Dictionary<string, string> filters)
+		private TableServiceQuery<TPersistentEntity> CreateQueryForGetList(TableServiceContext context, Dictionary<string, string> filters)
 		{
 			var query = context.CreateQuery<TPersistentEntity>(_tableName);
 			query = filters.Aggregate(query, (current, keyValuePair) => current.AddQueryOption(keyValuePair.Key, keyValuePair.Value));
-			return query.AsTableServiceQuery();
+			return query.AsTableServiceQuery(context);
 		}
 
 		private bool IsExistInternal(string filter)
@@ -257,66 +257,52 @@ namespace DataAccess.Repository
 		}
 
 		private IAsyncEnumerable<IEnumerable<TPersistentEntity>> GetListInternal(
-			CloudTableQuery<TPersistentEntity> tableQuery)
+			TableServiceQuery<TPersistentEntity> tableQuery)
 		{
-			ResultSegment<TPersistentEntity> resultSegment = null;
+			TableQuerySegment<TPersistentEntity> resultSegment = null;
 
 			return new GenericAsyncEnumerable<IEnumerable<TPersistentEntity>>(
 				() => new GenericAsyncEnumerator<IEnumerable<TPersistentEntity>>(
 					      moveNext: cancellationToken =>
 						                {
 							                var tcs = new TaskCompletionSource<bool>();
-							                Task<ResultSegment<TPersistentEntity>> task;
 
-							                if (resultSegment == null)
-							                {
-								                task = Retry.Do(
-									                () => Task<ResultSegment<TPersistentEntity>>.Factory.FromAsync(
-										                tableQuery.BeginExecuteSegmented,
-										                tableQuery.EndExecuteSegmented,
-										                (ResultContinuation)null,
-										                null),
-									                new LinearRetry(),
-									                CancellationToken.None);
-							                }
-							                else
-							                {
-								                if (!resultSegment.HasMoreResults)
-								                {
-									                return TaskHelpers.FromResult(false);
-								                }
+											if (resultSegment != null && 
+												resultSegment.ContinuationToken == null || 
+												cancellationToken.IsCancellationRequested)
+											{
+												return TaskHelpers.FromResult(false);
+											}
 
-								                // ReSharper disable AccessToModifiedClosure
-								                task = Retry.Do(
-									                () => Task<ResultSegment<TPersistentEntity>>.Factory.FromAsync(
-										                resultSegment.BeginGetNext, resultSegment.EndGetNext, null),
-													new LinearRetry(),
-									                CancellationToken.None);
-								                // ReSharper restore AccessToModifiedClosure
-							                }
+							                var task = Retry.Do(
+								                () => Task<TableQuerySegment<TPersistentEntity>>.Factory.FromAsync(
+									                tableQuery.BeginExecuteSegmented,
+									                tableQuery.EndExecuteSegmented,
+									                (TableContinuationToken)null,
+									                null),
+								                new LinearRetry(),
+								                CancellationToken.None);
 
-							                task.ContinueWith(
-								                t =>
-									                {
-										                if (t.IsFaulted)
-										                {
-											                // ReSharper disable AssignNullToNotNullAttribute
-											                tcs.SetException(HandleException(t.Exception));
-											                // ReSharper restore AssignNullToNotNullAttribute
-										                }
-										                else if (t.IsCanceled)
-										                {
-											                tcs.SetCanceled();
-										                }
-										                else
-										                {
-											                resultSegment = t.Result;
-											                tcs.SetResult(true);
-										                }
-									                },
-								                TaskContinuationOptions.ExecuteSynchronously);
+												task.ContinueWith(
+													t =>
+														{
+															if (t.IsFaulted)
+															{
+																tcs.SetException(HandleException(t.Exception));
+															}
+															else if (t.IsCanceled)
+															{
+																tcs.SetCanceled();
+															}
+															else
+															{
+																resultSegment = t.Result;
+																tcs.SetResult(true);
+															}
+														},
+													TaskContinuationOptions.ExecuteSynchronously);
 
-							                return tcs.Task;
+												return tcs.Task;
 						                },
 					      current: () =>
 						               {

@@ -18,7 +18,7 @@ namespace DataAccess.Repository
 
 		public Task SaveBlob(string containerName, string fileName, Stream stream)
 		{
-			CloudBlob cloudBlob = null;
+			CloudBlockBlob cloudBlob = null;
 			try
 			{
 				if (stream.CanSeek)
@@ -27,7 +27,7 @@ namespace DataAccess.Repository
 				}
 				
 				var blobContainer = CreateContainer(containerName);
-				cloudBlob = CreateBlob(fileName, blobContainer);
+				cloudBlob = CreateBlockBlob(fileName, blobContainer);
 				return Task.Factory.FromAsync(cloudBlob.BeginUploadFromStream, cloudBlob.EndUploadFromStream, stream, null);
 			}
 			catch (StorageException exception)
@@ -46,26 +46,15 @@ namespace DataAccess.Repository
 			}
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <param name="blobContainer"></param>
-		/// <returns></returns>
-		private static CloudBlob CreateBlob(string fileName, CloudBlobContainer blobContainer)
+		private static CloudBlockBlob CreateBlockBlob(string fileName, CloudBlobContainer blobContainer)
 		{
-			return blobContainer.GetBlobReference(fileName);
+			return blobContainer.GetBlockBlobReference(fileName);
 		}
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="containerName"></param>
-		/// <returns></returns>
 		private CloudBlobContainer CreateContainer(string containerName)
 		{
 			var container = _blobClient.GetContainerReference(containerName);
-			if (container.CreateIfNotExist())
+			if (container.CreateIfNotExists())
 			{
 				var perm = new BlobContainerPermissions {PublicAccess = BlobContainerPublicAccessType.Blob};
 				container.SetPermissions(perm);

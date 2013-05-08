@@ -38,6 +38,7 @@ namespace DataAccess.Helpers
 
 				// TODO: Init
 				var statusCode = 0;
+				// TODO: Init
 				var operationContext = new OperationContext();
 
 				if (policy.ShouldRetry(retryCount, 0, finishedTask.Exception.InnerExceptions[0], out delay, operationContext))

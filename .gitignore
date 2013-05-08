@@ -2,6 +2,7 @@
 bin
 obj
 *.suo
+*.DotSettings.user
 Database
 # mstest test results
 TestResults
