@@ -12,7 +12,7 @@ namespace DataAccess.Repository
 
 		public BlobRepository(string connectionString)
 		{
-			var storageAccount = CloudStorageAccount.Parse(connectionString);
+			var storageAccount = StorageAccountFactory.CreateCloudStorageAccount(connectionString);
 			_blobClient = storageAccount.CreateCloudBlobClient();
 		}
 

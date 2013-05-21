@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.ServiceModel;
+using System.ServiceModel.Web;
 using MediaRepositoryWebRole.Faults;
 
 namespace MediaRepositoryWebRole.Contracts
@@ -12,6 +13,7 @@ namespace MediaRepositoryWebRole.Contracts
 		[FaultContract(typeof(UserNotFoundFault))]
 		[FaultContract(typeof(EntityAlreadyExistsFault))]
 		[FaultContract(typeof(InternalServerErrorFault))]
+		[WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
 		IAsyncResult BeginCreateDevice(string userName, string password, Guid deviceGuid, string deviceName, AsyncCallback callback, object state);
 
 		void EndCreateDevice(IAsyncResult result);
@@ -21,6 +23,7 @@ namespace MediaRepositoryWebRole.Contracts
 		[FaultContract(typeof(SerializeExceptionFault))]
 		[FaultContract(typeof(EntityAlreadyExistsFault))]
 		[FaultContract(typeof(InternalServerErrorFault))]
+		[WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
 		IAsyncResult BeginUploadPreview(Stream previewInfoStream, AsyncCallback callback, object state);
 
 		void EndUploadPreview(IAsyncResult result);
@@ -29,12 +32,9 @@ namespace MediaRepositoryWebRole.Contracts
 		[FaultContract(typeof(DeviceNotFoundFault))]
 		[FaultContract(typeof(InternalServerErrorFault))]
 		[FaultContract(typeof(SerializeExceptionFault))]
+		[WebInvoke(Method = "POST", RequestFormat = WebMessageFormat.Json, ResponseFormat = WebMessageFormat.Json)]
 		IAsyncResult BeginUploadOriginal(Stream fileInfoStream, AsyncCallback callback, object state);
 
 		void EndUploadOriginal(IAsyncResult result);
-
-		[OperationContract]
-		[FaultContract(typeof(InternalServerErrorFault))]
-		string IsQueryExist(Guid deviceGuid);
 	}
 }

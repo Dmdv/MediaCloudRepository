@@ -6,13 +6,13 @@ namespace MediaRepositoryWebRole.Data
 	[DataContract]
 	public class User
 	{
-		[DataMember(IsRequired = true)]
+		[DataMember]
 		public Guid UserId { get; set; }
 
-		[DataMember(IsRequired = true)]
+		[DataMember]
 		public string Name { get; set; }
 
-		[DataMember(IsRequired = true)]
+		[DataMember]
 		public string Password { get; set; }
 	}
 }

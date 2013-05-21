@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using DataAccess.BusinessLogic;
 using DataAccess.Exceptions;
 using MediaRepositoryWebRole.Contracts;
-using User = DataAccess.Entities.User;
 using MediaRepositoryWebRole.Extensions;
+using User = DataAccess.Entities.User;
 
 namespace MediaRepositoryWebRole
 {
-	public class MediaRepositoryService : ServiceBase, IMediaRepositoryService, IUserManager
+	public class MediaRepositoryService : ServiceBase,
+		IMediaRepositoryService, 
+		IUserManager
 	{
 		private readonly UserManager _userManager;
 		private readonly DeviceManager _deviceManager;
@@ -17,8 +19,9 @@ namespace MediaRepositoryWebRole
 
 		public MediaRepositoryService()
 		{
+			var userContext = ServiceFactory.CreateUserContext();
 			_userManager = new UserManager(
-				ServiceFactory.CreateUserContext());
+				userContext);
 
 			_deviceManager = new DeviceManager(
 				ServiceFactory.CreateDeviceContext(), 
@@ -66,14 +69,9 @@ namespace MediaRepositoryWebRole
 			ProcessWithExceptionShield(() => ((Task)result).Wait());
 		}
 
-		public string IsQueryExist(Guid deviceGuid)
-		{
-			return _mediaManager.IsQueryExist(deviceGuid);
-		}
-
 		public IAsyncResult BeginCreateUser(Data.User user, AsyncCallback callback, object state)
 		{
-			var task = _userManager.CreateUser(new User(user.Name, user.Password) {UserId = user.UserId});
+			var task = _userManager.CreateUser(new User(user.Name, user.Password) { UserId = user.UserId });
 			return task.AsAsyncResult(callback, state);
 		}
 

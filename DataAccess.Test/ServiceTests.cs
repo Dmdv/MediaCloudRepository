@@ -21,7 +21,6 @@ namespace DataAccess.Test
 	public class ServiceTests
 	{
 		private const string Image = "Image.jpg";
-		private const string FileName = "trace.jpg";
 
 		private static IMediaRepositoryService _mediaRepository;
 		private static IUserManager _userManager;
@@ -29,7 +28,6 @@ namespace DataAccess.Test
 		private User _user;
 		private static ITableStorageProvider<Entities.User> _userContext;
 		private static ITableStorageProvider<Device> _deviceContext;
-		private static ITableStorageProvider<MediaFile> _mediaContext;
 		private static CloudBlobClient _blobClient;
 
 		private string _deviceName;
@@ -43,7 +41,6 @@ namespace DataAccess.Test
 			_mediaRepository = new ServiceInterfaceProxy<IMediaRepositoryService>(string.Empty).GetInterface();
 			_userContext = ServiceFactory.CreateUserContext();
 			_deviceContext = ServiceFactory.CreateDeviceContext();
-			_mediaContext = ServiceFactory.CreateMediaFileContext();
 			_blobClient = TestsHelper.InitializeAzure();
 		}
 
@@ -61,6 +58,7 @@ namespace DataAccess.Test
 			_deviceId = Guid.NewGuid();
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateUserRemotely()
 		{
@@ -71,6 +69,7 @@ namespace DataAccess.Test
 			Assert.IsFalse(repository.IsExist(_user.Name, "111", _user.UserId));
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateUserTwiceRemotely()
 		{
@@ -85,6 +84,7 @@ namespace DataAccess.Test
 			}
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateDeviceUserNotFound()
 		{
@@ -99,6 +99,7 @@ namespace DataAccess.Test
 			}
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateDeviceTwiceRemotely()
 		{
@@ -115,6 +116,7 @@ namespace DataAccess.Test
 			}
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateDeviceAndCheck()
 		{
@@ -125,6 +127,7 @@ namespace DataAccess.Test
 			Assert.IsNotNull(repository.Find(_deviceId, _deviceName).Result.FirstOrDefault());
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestUploadPreviewDeviceNotFound()
 		{
@@ -140,6 +143,7 @@ namespace DataAccess.Test
 			}
 		}
 
+		[TestCategory("ServiceTests")]
 		[TestMethod]
 		public void TestCreateDeviceAndUploadPreview()
 		{
@@ -158,12 +162,12 @@ namespace DataAccess.Test
 				using (var writeStream = new MemoryStream())
 				{
 					var preview = new FileStreamInfo
-						{
-							DateTime = DateTime.Now,
-							FileName = fileName,
-							DeviceId = _deviceId,
-							Stream = memoryStream
-						};
+					{
+						DateTime = DateTime.Now,
+						FileName = fileName,
+						DeviceId = _deviceId,
+						Stream = memoryStream
+					};
 
 					var formatter = new BinaryFormatter();
 					formatter.Serialize(writeStream, preview);

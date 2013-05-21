@@ -40,6 +40,7 @@ namespace DataAccess.Test
 			_blobClient = TestsHelper.InitializeAzure();
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestCreateUser()
 		{
@@ -49,6 +50,7 @@ namespace DataAccess.Test
 			Assert.IsFalse(repository.IsExist(_user.Name, "111", _user.UserId));
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		[ExpectedException(typeof(AggregateException))]
 		public void TestCreateExistingUser()
@@ -58,6 +60,7 @@ namespace DataAccess.Test
 			repository.Add(_user).Wait();
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestCreateAndFindUser()
 		{
@@ -79,6 +82,7 @@ namespace DataAccess.Test
 			return user;
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestCreateAndDeleteHistory()
 		{
@@ -91,6 +95,7 @@ namespace DataAccess.Test
 			Assert.IsTrue(repository.IsExist(query.DeviceId) == string.Empty);
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestGetOldestHistory()
 		{
@@ -105,6 +110,7 @@ namespace DataAccess.Test
 			Assert.IsTrue(repository.IsExist(query.DeviceId) == "old");
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestDateTimeSerializer()
 		{
@@ -123,6 +129,7 @@ namespace DataAccess.Test
 			Assert.IsTrue(media.RowKey == "20080309160507");
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestCreateDevice()
 		{
@@ -144,6 +151,7 @@ namespace DataAccess.Test
 			Assert.IsNotNull(repository.Find((Guid) device1.DeviceId, device1.DeviceName).Result.FirstOrDefault());
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestUploadToBlob()
 		{
@@ -179,6 +187,7 @@ namespace DataAccess.Test
 			Assert.AreEqual(blobContainer.Name, deviceId.ToStringWithInvariantCulture());
 		}
 
+		[TestCategory("AzureTests")]
 		[TestMethod]
 		public void TestSearchFilter()
 		{

@@ -2,7 +2,8 @@
 
 namespace DataAccess.Repository
 {
-	public class GenericTableStorageProvider<TEntity> : TableStorageProviderBase<TEntity, TEntity> where TEntity : TableServiceEntity
+	public class GenericTableStorageProvider<TEntity> : 
+		TableStorageProviderBase<TEntity, TEntity> where TEntity : TableServiceEntity
 	{
 		public GenericTableStorageProvider(string tableName, string connectionString)
 			: base(tableName, connectionString)

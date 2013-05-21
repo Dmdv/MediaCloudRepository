@@ -139,6 +139,7 @@
     <Compile Include="Repository\MediaRepository.cs" />
     <Compile Include="Repository\QueryRepository.cs" />
     <Compile Include="Repository\RepositoryBase.cs" />
+    <Compile Include="Repository\StorageAccountFactory.cs" />
     <Compile Include="Repository\StorageOperationType.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Repository\TableStorageProviderBase.cs" />

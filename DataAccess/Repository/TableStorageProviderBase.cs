@@ -22,7 +22,7 @@ namespace DataAccess.Repository
 		protected TableStorageProviderBase(string tableName, string connectionString)
 		{
 			_tableName = tableName;
-			var account = CloudStorageAccount.Parse(connectionString);
+			var account = StorageAccountFactory.CreateCloudStorageAccount(connectionString);
 			_tableAccount = account.CreateCloudTableClient();
 		}
 

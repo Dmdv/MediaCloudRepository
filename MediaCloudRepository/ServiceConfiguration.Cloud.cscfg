@@ -8,7 +8,7 @@
       <Setting name="UserTable" value="UserTable" />
       <Setting name="MediaTable" value="MediaTable" />
       <Setting name="QueryHistory" value="QueryHistory" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="" />
-    <Setting name="Microsoft.WindowsAzure.Plugins.Caching.ClientDiagnosticLevel" value="1" /></ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Caching.ClientDiagnosticLevel" value="1" />
+    </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
