@@ -3,20 +3,20 @@
   <PropertyGroup>
     <AzureCredentials>3-Month Free Trial</AzureCredentials>
     <AzureDeleteDeploymentOnFailure>False</AzureDeleteDeploymentOnFailure>
-    <AzureDeploymentLabel>SillJade</AzureDeploymentLabel>
+    <AzureDeploymentLabel>MediaUpload</AzureDeploymentLabel>
     <AzureDeploymentReplacementMethod>AutomaticUpgrade</AzureDeploymentReplacementMethod>
     <AzureSlot>Production</AzureSlot>
     <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
     <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
-    <AzureHostedServiceLabel>SkillJade</AzureHostedServiceLabel>
-    <AzureHostedServiceName>skilljade</AzureHostedServiceName>
+    <AzureHostedServiceLabel>MediaUpload</AzureHostedServiceLabel>
+    <AzureHostedServiceName>mediaupload</AzureHostedServiceName>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
     <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
-    <AzureStorageAccountLabel>SkillJade</AzureStorageAccountLabel>
-    <AzureStorageAccountName>skilljade</AzureStorageAccountName>
+    <AzureStorageAccountLabel>MediaUpload</AzureStorageAccountLabel>
+    <AzureStorageAccountName>mediaupload</AzureStorageAccountName>
     <AzureAppendTimestampToDeploymentLabel>True</AzureAppendTimestampToDeploymentLabel>
   </PropertyGroup>
 </Project>

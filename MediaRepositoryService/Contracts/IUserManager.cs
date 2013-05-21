@@ -11,7 +11,7 @@ namespace MediaRepositoryWebRole.Contracts
 		[OperationContract(Name = "CreateUser", AsyncPattern = true)]
 		[WebInvoke(
 			Method = "POST",
-			BodyStyle = WebMessageBodyStyle.Bare,
+			BodyStyle = WebMessageBodyStyle.Wrapped,
 			ResponseFormat = WebMessageFormat.Json,
 			RequestFormat = WebMessageFormat.Json,
 			UriTemplate = "/create/user")]
