@@ -79,5 +79,19 @@ namespace MediaRepositoryWebRole
 		{
 			ProcessWithExceptionShield(() => ((Task)result).Wait());
 		}
+
+		// {"user":{"Name":"111","Password":"111","UserId":"00000000-0000-0000-0000-000000000000"},"user2":{"Name":null,"Password":null,"UserId":"00000000-0000-0000-0000-000000000000"}}
+
+		public IAsyncResult BeginCreateUser2(Data.User user, Data.User user2, AsyncCallback callback, object state)
+		{
+			var task = Task.Run(() => new Data.User());
+			return task.AsAsyncResult(callback, state);
+		}
+
+		public Data.User EndCreateUser2(IAsyncResult result)
+		{
+			var task = (Task<Data.User>) result;
+			return ProcessWithExceptionShield(() => task.Result);
+		}
 	}
 }

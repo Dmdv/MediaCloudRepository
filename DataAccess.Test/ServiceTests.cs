@@ -1,16 +1,19 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using DataAccess.Entities;
 using DataAccess.Repository;
+using HttpUtils;
 using MediaRepositoryWebRole;
 using MediaRepositoryWebRole.Contracts;
 using MediaRepositoryWebRole.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
 using DataAccess.Test.Extensions;
+using Newtonsoft.Json;
 using User = MediaRepositoryWebRole.Data.User;
 
 namespace DataAccess.Test
@@ -62,7 +65,16 @@ namespace DataAccess.Test
 		[TestMethod]
 		public void TestCreateUserRemotely()
 		{
-			_userManager.CreateUserAsync(_user).Wait();
+			var serializeObject = JsonConvert.SerializeObject(_user);
+
+			var client = new RestClient(
+				endpoint: "http://localhost/Repository/Service.svc/UserManager/create/user",
+				method: HttpVerb.POST,
+				postData: serializeObject);
+
+			var json = client.MakeRequest();
+
+			// _userManager.CreateUserAsync(_user).Wait();
 
 			var repository = new UserRepository(_userContext);
 			Assert.IsTrue(repository.IsExist(_user.Name, _user.Password, _user.UserId));

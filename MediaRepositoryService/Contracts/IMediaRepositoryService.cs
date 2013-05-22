@@ -17,7 +17,7 @@ namespace MediaRepositoryWebRole.Contracts
 			Method = "POST", 
 			RequestFormat = WebMessageFormat.Json, 
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Wrapped)]
+			BodyStyle = WebMessageBodyStyle.WrappedRequest)]
 		IAsyncResult BeginCreateDevice(string userName, string password, Guid deviceGuid, string deviceName, AsyncCallback callback, object state);
 
 		void EndCreateDevice(IAsyncResult result);
@@ -31,7 +31,7 @@ namespace MediaRepositoryWebRole.Contracts
 			Method = "POST", 
 			RequestFormat = WebMessageFormat.Json, 
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Wrapped)]
+			BodyStyle = WebMessageBodyStyle.Bare)]
 		IAsyncResult BeginUploadPreview(Stream previewInfoStream, AsyncCallback callback, object state);
 
 		void EndUploadPreview(IAsyncResult result);
@@ -44,7 +44,7 @@ namespace MediaRepositoryWebRole.Contracts
 			Method = "POST", 
 			RequestFormat = WebMessageFormat.Json, 
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Wrapped)]
+			BodyStyle = WebMessageBodyStyle.Bare)]
 		IAsyncResult BeginUploadOriginal(Stream fileInfoStream, AsyncCallback callback, object state);
 
 		void EndUploadOriginal(IAsyncResult result);
