@@ -93,5 +93,16 @@ namespace MediaRepositoryWebRole
 			var task = (Task<Data.User>) result;
 			return ProcessWithExceptionShield(() => task.Result);
 		}
+
+		public bool IsUserExists(Data.User user)
+		{
+			return _userManager.IsUserExists(
+				new User
+				{
+					Name = user.Name, 
+					Password = user.Password, 
+					UserId = user.UserId
+				});
+		}
 	}
 }

@@ -24,8 +24,8 @@ namespace DataAccess.Repository
 
 		public User Find(string name, string password, Guid? userId)
 		{
-			return 
-				Get(DefaultSearchKey(new User(name, password) {UserId = userId}))
+			return
+				Get(DefaultSearchKey(new User(name, password) { UserId = userId }))
 				.Result
 				.SingleOrDefault(x => x.Password == password);
 		}

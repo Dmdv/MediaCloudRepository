@@ -61,7 +61,9 @@ namespace DataAccess.Entities
 
 		private string CreateRowKey()
 		{
-			return UserId.HasValue ? UserId.ToStringWithInvariantCulture() : string.Empty;
+			return UserId.HasValue && UserId != Guid.Empty
+				       ? UserId.ToStringWithInvariantCulture()
+				       : string.Empty;
 		}
 
 		private void CreateKeys()

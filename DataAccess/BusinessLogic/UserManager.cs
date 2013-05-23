@@ -25,5 +25,10 @@ namespace DataAccess.BusinessLogic
 			Guard.CheckNotNull(user, "user");
 			return _userRepository.Add(user).HandleException(ex => ex.GetBaseException());
 		}
+
+		public bool IsUserExists(User user)
+		{
+			return _userRepository.IsExist(user.Name, user.Password, user.UserId);
+		}
 	}
 }

@@ -42,6 +42,22 @@ namespace DataAccess.Test
 
 		[TestCategory("AzureTests")]
 		[TestMethod]
+		public void TestIsUserExistsIfGuidEmpty()
+		{
+			var user = new User(
+				Guid.NewGuid().ToStringWithInvariantCulture(),
+				Guid.NewGuid().ToStringWithInvariantCulture())
+				{
+					UserId = Guid.Empty
+				};
+
+			var repository = new UserRepository(_userContext);
+			repository.Add(user).Wait();
+			Assert.IsTrue(repository.IsExist(user.Name, user.Password, user.UserId));
+		}
+
+		[TestCategory("AzureTests")]
+		[TestMethod]
 		public void TestCreateUser()
 		{
 			var repository = new UserRepository(_userContext);

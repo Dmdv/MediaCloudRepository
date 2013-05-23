@@ -29,5 +29,14 @@ namespace MediaRepositoryWebRole.Contracts
 		IAsyncResult BeginCreateUser2(User user, User user2, AsyncCallback callback, object state);
 
 		User EndCreateUser2(IAsyncResult result);
+
+		[OperationContract(Name = "IsUserExists", AsyncPattern = false)]
+		[WebInvoke(
+			Method = "POST",
+			BodyStyle = WebMessageBodyStyle.Bare,
+			ResponseFormat = WebMessageFormat.Json,
+			RequestFormat = WebMessageFormat.Json,
+			UriTemplate = "/isuserexists")]
+		bool IsUserExists(User user);
 	}
 }

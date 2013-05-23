@@ -5,5 +5,8 @@
     </WebRoleSkipLaunchInBrowser>
     <ActivePublishProfile>TestServiceProduction</ActivePublishProfile>
     <UseIISExpress>False</UseIISExpress>
+    <PackageProfile>Cloud</PackageProfile>
+    <PackageSolutionConfiguration>Release</PackageSolutionConfiguration>
+    <PackageEnableRemoteDesktop>False</PackageEnableRemoteDesktop>
   </PropertyGroup>
 </Project>

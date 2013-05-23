@@ -8,7 +8,6 @@ using System.Web;
 using DataAccess.Exceptions;
 using DataAccess.Extensions;
 using DataAccess.Helpers;
-using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Table;
 using Microsoft.WindowsAzure.Storage.Table.DataServices;
 // using RetryPolicies = DataAccess.Helpers.RetryPolicies;
@@ -64,7 +63,7 @@ namespace DataAccess.Repository
 						context.EndSaveChanges,
 						SaveChangesOptions.Batch | SaveChangesOptions.ReplaceOnUpdate,
 						null),
-					new LinearRetry(),
+					new LinearRetry(TimeSpan.FromSeconds(10), 5),
 					CancellationToken.None);
 			}
 			catch (Exception e)
@@ -280,7 +279,7 @@ namespace DataAccess.Repository
 									                tableQuery.EndExecuteSegmented,
 									                (TableContinuationToken)null,
 									                null),
-								                new LinearRetry(),
+												new LinearRetry(TimeSpan.FromSeconds(10), 5),
 								                CancellationToken.None);
 
 												task.ContinueWith(
