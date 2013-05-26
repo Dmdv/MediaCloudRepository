@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AzureLocalStorageTraceListener.cs" />
+    <Compile Include="Data\CreateDeviceParam.cs" />
     <Compile Include="Data\FileStreamInfo.cs" />
     <Compile Include="Extensions\FaultExtensions.cs" />
     <Compile Include="Extensions\FileExtensions.cs" />

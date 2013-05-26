@@ -1,4 +1,4 @@
-﻿namespace HttpUtils
+﻿namespace DataAccess.Test.Http
 {
 	public enum HttpVerb
 	{

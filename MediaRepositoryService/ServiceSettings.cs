@@ -7,5 +7,6 @@
 		public string MediaTable { get; set; }
 		public string QueryHistory { get; set; }
 		public string ConnectionString { get; set; }
+		public string Uri { get; set; }
 	}
 }

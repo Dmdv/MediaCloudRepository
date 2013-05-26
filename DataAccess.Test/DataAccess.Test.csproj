@@ -81,12 +81,14 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Extensions\AsyncExtension.cs" />
-    <Compile Include="HttpVerb.cs" />
-    <Compile Include="RestClient.cs" />
+    <Compile Include="Http\Application.cs" />
+    <Compile Include="Http\HttpVerb.cs" />
+    <Compile Include="Http\Rest.cs" />
+    <Compile Include="Http\RestClient.cs" />
+    <Compile Include="Http\RestCommand.cs" />
     <Compile Include="ServiceInterfaceProxy.cs" />
     <Compile Include="AzureTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceSettings.cs" />
     <Compile Include="ServiceTests.cs" />
     <Compile Include="TestsHelper.cs" />
   </ItemGroup>

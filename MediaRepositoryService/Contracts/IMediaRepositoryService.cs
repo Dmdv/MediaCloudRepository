@@ -2,6 +2,7 @@
 using System.IO;
 using System.ServiceModel;
 using System.ServiceModel.Web;
+using MediaRepositoryWebRole.Data;
 using MediaRepositoryWebRole.Faults;
 
 namespace MediaRepositoryWebRole.Contracts
@@ -14,11 +15,12 @@ namespace MediaRepositoryWebRole.Contracts
 		[FaultContract(typeof(EntityAlreadyExistsFault))]
 		[FaultContract(typeof(InternalServerErrorFault))]
 		[WebInvoke(
-			Method = "POST", 
-			RequestFormat = WebMessageFormat.Json, 
+			Method = "POST",
+			RequestFormat = WebMessageFormat.Json,
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.WrappedRequest)]
-		IAsyncResult BeginCreateDevice(string userName, string password, Guid deviceGuid, string deviceName, AsyncCallback callback, object state);
+			BodyStyle = WebMessageBodyStyle.Bare,
+			UriTemplate = "/create/device")]
+		IAsyncResult BeginCreateDevice(CreateDeviceParam param, AsyncCallback callback, object state);
 
 		void EndCreateDevice(IAsyncResult result);
 
@@ -31,8 +33,9 @@ namespace MediaRepositoryWebRole.Contracts
 			Method = "POST", 
 			RequestFormat = WebMessageFormat.Json, 
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Bare)]
-		IAsyncResult BeginUploadPreview(Stream previewInfoStream, AsyncCallback callback, object state);
+			BodyStyle = WebMessageBodyStyle.Bare,
+			UriTemplate = "/uploadpreview/{filename}/{deviceid}")]
+		IAsyncResult BeginUploadPreview(string filename, string deviceId, Stream stream, AsyncCallback callback, object state);
 
 		void EndUploadPreview(IAsyncResult result);
 
@@ -44,8 +47,9 @@ namespace MediaRepositoryWebRole.Contracts
 			Method = "POST", 
 			RequestFormat = WebMessageFormat.Json, 
 			ResponseFormat = WebMessageFormat.Json,
-			BodyStyle = WebMessageBodyStyle.Bare)]
-		IAsyncResult BeginUploadOriginal(Stream fileInfoStream, AsyncCallback callback, object state);
+			BodyStyle = WebMessageBodyStyle.Bare,
+			UriTemplate = "/uploadoriginal/{filename}/{deviceid}")]
+		IAsyncResult BeginUploadOriginal(string filename, string deviceId, Stream stream, AsyncCallback callback, object state);
 
 		void EndUploadOriginal(IAsyncResult result);
 	}

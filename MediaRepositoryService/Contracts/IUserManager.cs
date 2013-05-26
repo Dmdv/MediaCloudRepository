@@ -19,17 +19,6 @@ namespace MediaRepositoryWebRole.Contracts
 
 		void EndCreateUser(IAsyncResult result);
 
-		[OperationContract(Name = "CreateUser2", AsyncPattern = true)]
-		[WebInvoke(
-			Method = "POST",
-			BodyStyle = WebMessageBodyStyle.WrappedRequest,
-			ResponseFormat = WebMessageFormat.Json,
-			RequestFormat = WebMessageFormat.Json,
-			UriTemplate = "/creates/user")]
-		IAsyncResult BeginCreateUser2(User user, User user2, AsyncCallback callback, object state);
-
-		User EndCreateUser2(IAsyncResult result);
-
 		[OperationContract(Name = "IsUserExists", AsyncPattern = false)]
 		[WebInvoke(
 			Method = "POST",

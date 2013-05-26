@@ -1,12 +1,42 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using MediaRepositoryWebRole.Data;
 
 namespace MediaRepositoryWebRole.Extensions
 {
-	internal static class FileExtensions
+	public static class FileExtensions
 	{
-		private const int BufferSize = 1024 * 4;
+		private const int BufferSize = 1024 * 20;
+
+		public static void SaveToStream(this Stream sourceStream, Stream stream)
+		{
+			if (!sourceStream.CanRead)
+			{
+				throw new NotSupportedException("thisStream cannot be read");
+			}
+
+			if (!stream.CanWrite)
+			{
+				throw new NotSupportedException("stream is not writeable");
+			}
+
+			if (!sourceStream.CanSeek)
+			{
+				throw new NotSupportedException("thisStream is not seekable");
+			}
+
+			sourceStream.Seek(0, SeekOrigin.Begin);
+
+			var buffer = new byte[BufferSize];
+			var read = sourceStream.Read(buffer, 0, BufferSize);
+
+			while (read > 0)
+			{
+				stream.Write(buffer, 0, read);
+				read = sourceStream.Read(buffer, 0, BufferSize);
+			}
+		}
 
 		public static string SaveToFile(this FileStreamInfo fileStreamInfo)
 		{

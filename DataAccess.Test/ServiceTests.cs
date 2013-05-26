@@ -1,19 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading.Tasks;
+using System.Net;
 using DataAccess.Entities;
 using DataAccess.Repository;
-using HttpUtils;
+using DataAccess.Test.Http;
 using MediaRepositoryWebRole;
-using MediaRepositoryWebRole.Contracts;
 using MediaRepositoryWebRole.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.WindowsAzure.Storage.Blob;
-using DataAccess.Test.Extensions;
-using Newtonsoft.Json;
 using User = MediaRepositoryWebRole.Data.User;
 
 namespace DataAccess.Test
@@ -24,24 +19,24 @@ namespace DataAccess.Test
 	public class ServiceTests
 	{
 		private const string Image = "Image.jpg";
+		private const string Trace = "trace.jpg";
 
-		private static IMediaRepositoryService _mediaRepository;
-		private static IUserManager _userManager;
+		// private static IMediaRepositoryService _mediaRepository;
+		// private static IUserManager _userManager;
 
-		private User _user;
 		private static ITableStorageProvider<Entities.User> _userContext;
 		private static ITableStorageProvider<Device> _deviceContext;
 		private static CloudBlobClient _blobClient;
 
+		private User _user;
 		private string _deviceName;
 		private Guid _deviceId;
 
 		[ClassInitialize]
 		public static void Init(TestContext context)
 		{
-			TestsHelper.InitializeAzure();
-			_userManager = new ServiceInterfaceProxy<IUserManager>(string.Empty).GetInterface();
-			_mediaRepository = new ServiceInterfaceProxy<IMediaRepositoryService>(string.Empty).GetInterface();
+			// _userManager = new ServiceInterfaceProxy<IUserManager>(string.Empty).GetInterface();
+			// _mediaRepository = new ServiceInterfaceProxy<IMediaRepositoryService>(string.Empty).GetInterface();
 			_userContext = ServiceFactory.CreateUserContext();
 			_deviceContext = ServiceFactory.CreateDeviceContext();
 			_blobClient = TestsHelper.InitializeAzure();
@@ -65,16 +60,7 @@ namespace DataAccess.Test
 		[TestMethod]
 		public void TestCreateUserRemotely()
 		{
-			var serializeObject = JsonConvert.SerializeObject(_user);
-
-			var client = new RestClient(
-				endpoint: "http://localhost/Repository/Service.svc/UserManager/create/user",
-				method: HttpVerb.POST,
-				postData: serializeObject);
-
-			var json = client.MakeRequest();
-
-			// _userManager.CreateUserAsync(_user).Wait();
+			Assert.AreEqual(CreateUser(), string.Empty);
 
 			var repository = new UserRepository(_userContext);
 			Assert.IsTrue(repository.IsExist(_user.Name, _user.Password, _user.UserId));
@@ -85,14 +71,44 @@ namespace DataAccess.Test
 		[TestMethod]
 		public void TestCreateUserTwiceRemotely()
 		{
-			_userManager.CreateUserAsync(_user).Wait();
+			Assert.AreEqual(CreateUser(), string.Empty);
 			try
 			{
-				_userManager.CreateUserAsync(_user).Wait();
+				Assert.AreEqual(CreateUser(), string.Empty);
 			}
-			catch (Exception e)
+			catch (WebException ex)
 			{
-				Assert.IsTrue(e.InnerException.Message.ToLower().Contains("entity already exists"));
+				AssertBadRequest(ex);
+			}
+		}
+
+		[TestCategory("ServiceTests")]
+		[TestMethod]
+		public void TestCreateDeviceAndCheck()
+		{
+			Assert.AreEqual(CreateUser(), string.Empty);
+			Assert.AreEqual(CreateDevice(), string.Empty);
+
+			var repository = new DeviceRepository(_deviceContext);
+
+			Assert.IsTrue(repository.IsExist(_deviceId));
+			Assert.IsNotNull(repository.Find(_deviceId, _deviceName).Result.FirstOrDefault());
+		}
+
+		[TestCategory("ServiceTests")]
+		[TestMethod]
+		public void TestCreateDeviceTwiceRemotely()
+		{
+			Assert.AreEqual(CreateUser(), string.Empty);
+			Assert.AreEqual(CreateDevice(), string.Empty);
+
+			try
+			{
+				Assert.AreEqual(CreateDevice(), string.Empty);
+			}
+			catch (WebException ex)
+			{
+				AssertBadRequest(ex);
 			}
 		}
 
@@ -102,41 +118,38 @@ namespace DataAccess.Test
 		{
 			try
 			{
-				CreateDevice();
+				Assert.AreEqual(CreateDevice(), string.Empty);
 			}
-			catch (AggregateException ex)
+			catch (WebException ex)
 			{
-				var innerException = ex.InnerException.Message.ToLower();
-				Assert.IsTrue(innerException.Contains("user") && innerException.Contains("does not exist"));
+				AssertBadRequest(ex);
 			}
 		}
 
 		[TestCategory("ServiceTests")]
 		[TestMethod]
-		public void TestCreateDeviceTwiceRemotely()
+		public void TestCreateDeviceAndUploadPreview()
 		{
-			_userManager.CreateUserAsync(_user).Wait();
-			CreateDevice();
-			try
-			{
-				CreateDevice();
-			}
-			catch (Exception e)
-			{
-				var message = string.Format("Device {0} already exists", _deviceName);
-				Assert.IsTrue(e.InnerException.Message == message);
-			}
+			Assert.AreEqual(CreateUser(), string.Empty);
+			Assert.AreEqual(CreateDevice(), string.Empty);
+
+			UploadRest(Image, RestCommand.UploadPreview);
+
+			var blobContainer = _blobClient.GetContainerReference(_deviceId.ToString());
+			Assert.AreEqual(blobContainer.Name, _deviceId.ToString());
 		}
 
 		[TestCategory("ServiceTests")]
 		[TestMethod]
-		public void TestCreateDeviceAndCheck()
+		public void TestCreateDeviceAndUploadOriginal()
 		{
-			_userManager.CreateUserAsync(_user).Wait();
-			CreateDevice();
-			var repository = new DeviceRepository(_deviceContext);
-			Assert.IsTrue(repository.IsExist(_deviceId));
-			Assert.IsNotNull(repository.Find(_deviceId, _deviceName).Result.FirstOrDefault());
+			Assert.AreEqual(CreateUser(), string.Empty);
+			Assert.AreEqual(CreateDevice(), string.Empty);
+
+			UploadRest(Trace, RestCommand.UploadOriginal);
+
+			var blobContainer = _blobClient.GetContainerReference(_deviceId.ToString());
+			Assert.AreEqual(blobContainer.Name, _deviceId.ToString());
 		}
 
 		[TestCategory("ServiceTests")]
@@ -145,65 +158,93 @@ namespace DataAccess.Test
 		{
 			try
 			{
-				UploadPreview(Image);
+				UploadRest(Image, RestCommand.UploadPreview);
 			}
-			catch (AggregateException ex)
+			catch (WebException ex)
 			{
-				var message = ex.InnerException.Message;
-				Assert.IsTrue(message.Contains("Device with id"));
-				Assert.IsTrue(message.Contains("hasn't been found."));
+				AssertBadRequest(ex);
 			}
 		}
 
-		[TestCategory("ServiceTests")]
-		[TestMethod]
-		public void TestCreateDeviceAndUploadPreview()
-		{
-			_userManager.CreateUserAsync(_user).Wait();
-			CreateDevice();
-			UploadPreview(Image);
+		//private void UploadPreview(string fileName)
+		//{
+		//	using (var memoryStream = new MemoryStream(File.ReadAllBytes(fileName)))
+		//	{
+		//		using (var writeStream = new MemoryStream())
+		//		{
+		//			var preview = new FileStreamInfo
+		//			{
+		//				DateTime = DateTime.Now,
+		//				FileName = fileName,
+		//				DeviceId = _deviceId,
+		//				Stream = memoryStream
+		//			};
 
-			var blobContainer = _blobClient.GetContainerReference(_deviceId.ToString());
-			Assert.AreEqual(blobContainer.Name, _deviceId.ToString());
-		}
+		//			var formatter = new BinaryFormatter();
+		//			formatter.Serialize(writeStream, preview);
 
-		private void UploadPreview(string fileName)
+		//			if (writeStream.CanSeek)
+		//			{
+		//				writeStream.Seek(0, SeekOrigin.Begin);
+		//			}
+
+		//			var asyncResult = _mediaRepository.BeginUploadPreview(writeStream, null, null);
+		//			Task.Factory.FromAsync(asyncResult, _mediaRepository.EndUploadPreview).Wait();
+		//		}
+		//	}
+		//}
+
+		private void UploadRest(string fileName, string command)
 		{
 			using (var memoryStream = new MemoryStream(File.ReadAllBytes(fileName)))
 			{
-				using (var writeStream = new MemoryStream())
-				{
-					var preview = new FileStreamInfo
-					{
-						DateTime = DateTime.Now,
-						FileName = fileName,
-						DeviceId = _deviceId,
-						Stream = memoryStream
-					};
+				command = command
+					.Replace("{filename}", fileName)
+					.Replace("{deviceid}", _deviceId.ToString());
 
-					var formatter = new BinaryFormatter();
-					formatter.Serialize(writeStream, preview);
-
-					if (writeStream.CanSeek)
-					{
-						writeStream.Seek(0, SeekOrigin.Begin);
-					}
-
-					var asyncResult = _mediaRepository.BeginUploadPreview(writeStream, null, null);
-					Task.Factory.FromAsync(asyncResult, _mediaRepository.EndUploadPreview).Wait();
-				}
+				Rest.PostStream(command, memoryStream);
 			}
 		}
 
-		private void CreateDevice()
+		private string CreateUser()
 		{
-			var asyncResult = _mediaRepository.BeginCreateDevice(
-				_user.Name,
-				_user.Password,
-				_deviceId,
-				_deviceName, null, null);
+			return Rest.Post(RestCommand.CreateUser, _user);
+		}
 
-			Task.Factory.FromAsync(asyncResult, _mediaRepository.EndCreateDevice).Wait();
+		private string CreateDevice()
+		{
+			var param = new CreateDeviceParam
+			{
+				DeviceName = _deviceName,
+				DeviceGuid = _deviceId,
+				Password = _user.Password,
+				UserName = _user.Name
+			};
+
+			return Rest.Post(RestCommand.CreateDevice, param);
+
+			//var asyncResult = _mediaRepository.BeginCreateDevice(param, null, null);
+			//Task.Factory.FromAsync(asyncResult, _mediaRepository.EndCreateDevice).Wait();
+		}
+
+		private static void AssertBadRequest(WebException ex)
+		{
+			if (ex.Status == WebExceptionStatus.ProtocolError)
+			{
+				var response = ex.Response as HttpWebResponse;
+				if (response != null)
+				{
+					Assert.AreEqual((int) response.StatusCode, 400);
+				}
+				else
+				{
+					Assert.Fail("Waiting for error status code");
+				}
+			}
+			else
+			{
+				Assert.Fail("Waiting for error status code");
+			}
 		}
 	}
 }

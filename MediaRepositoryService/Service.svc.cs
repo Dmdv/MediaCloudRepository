@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using DataAccess.BusinessLogic;
 using DataAccess.Exceptions;
 using MediaRepositoryWebRole.Contracts;
-using MediaRepositoryWebRole.Extensions;
+using MediaRepositoryWebRole.Data;
 using User = DataAccess.Entities.User;
 
 namespace MediaRepositoryWebRole
@@ -34,9 +34,9 @@ namespace MediaRepositoryWebRole
 				ServiceFactory.CreateBlobRepository());
 		}
 
-		public IAsyncResult BeginCreateDevice(string userName, string password, Guid deviceGuid, string deviceName, AsyncCallback callback, object state)
+		public IAsyncResult BeginCreateDevice(CreateDeviceParam param, AsyncCallback callback, object state)
 		{
-			var task = _deviceManager.CreateDevice(deviceGuid, deviceName, userName, password);
+			var task = _deviceManager.CreateDevice(param.DeviceGuid, param.DeviceName, param.UserName, param.Password);
 			return task.AsAsyncResult(callback, state);
 		}
 
@@ -45,10 +45,12 @@ namespace MediaRepositoryWebRole
 			ProcessWithExceptionShield(() => ((Task)result).Wait());
 		}
 
-		public IAsyncResult BeginUploadPreview(Stream previewInfoStream, AsyncCallback callback, object state)
+		public IAsyncResult BeginUploadPreview(
+			string filename,
+			string deviceId,
+			Stream stream, AsyncCallback callback, object state)
 		{
-			var filStreamInfo = previewInfoStream.Deserialize();
-			var task = _mediaManager.UploadPreview(filStreamInfo.DeviceId, filStreamInfo.FileName, filStreamInfo.DateTime, filStreamInfo.Stream);
+			var task = _mediaManager.UploadPreview(Guid.Parse(deviceId), filename, DateTime.UtcNow, stream);
 			return task.AsAsyncResult(callback, state);
 		}
 
@@ -57,10 +59,12 @@ namespace MediaRepositoryWebRole
 			ProcessWithExceptionShield(() => ((Task)result).Wait());
 		}
 
-		public IAsyncResult BeginUploadOriginal(Stream fileInfoStream, AsyncCallback callback, object state)
+		public IAsyncResult BeginUploadOriginal(
+			string filename,
+			string deviceId,
+			Stream stream, AsyncCallback callback, object state)
 		{
-			var filStreamInfo = fileInfoStream.Deserialize();
-			var task = _mediaManager.UploadOriginal(filStreamInfo.DeviceId, filStreamInfo.FileName, filStreamInfo.DateTime, filStreamInfo.Stream);
+			var task = _mediaManager.UploadOriginal(Guid.Parse(deviceId), filename, DateTime.UtcNow, stream);
 			return task.AsAsyncResult(callback, state);
 		}
 
@@ -78,20 +82,6 @@ namespace MediaRepositoryWebRole
 		public void EndCreateUser(IAsyncResult result)
 		{
 			ProcessWithExceptionShield(() => ((Task)result).Wait());
-		}
-
-		// {"user":{"Name":"111","Password":"111","UserId":"00000000-0000-0000-0000-000000000000"},"user2":{"Name":null,"Password":null,"UserId":"00000000-0000-0000-0000-000000000000"}}
-
-		public IAsyncResult BeginCreateUser2(Data.User user, Data.User user2, AsyncCallback callback, object state)
-		{
-			var task = Task.Run(() => new Data.User());
-			return task.AsAsyncResult(callback, state);
-		}
-
-		public Data.User EndCreateUser2(IAsyncResult result)
-		{
-			var task = (Task<Data.User>) result;
-			return ProcessWithExceptionShield(() => task.Result);
 		}
 
 		public bool IsUserExists(Data.User user)

@@ -19,6 +19,7 @@ namespace MediaRepositoryWebRole
 			_serviceSettings.MediaTable = ConfigurationManager.AppSettings["MediaTable"];
 			_serviceSettings.QueryHistory = ConfigurationManager.AppSettings["QueryHistory"];
 			_serviceSettings.UserTable = ConfigurationManager.AppSettings["UserTable"];
+			_serviceSettings.Uri = ConfigurationManager.AppSettings["Uri"];
 		}
 
 		public static ITableStorageProvider<Device> CreateDeviceContext()
