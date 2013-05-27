@@ -33,16 +33,21 @@ namespace DataAccess.Test.Http
 		// TODO: Избавиться от параметра.
 		public string MakeRequest(string parameters = "")
 		{
-			var request = WebRequest.Create(EndPoint + parameters);
+			var request = CreateWebRequest(parameters);
 			WriteBody(request);
 			return GetResponse(request);
 		}
 
 		public string MakeStreamRequest(Stream stream, string parameters = "")
 		{
-			var request = (HttpWebRequest)WebRequest.Create(EndPoint + parameters);
+			var request = CreateWebRequest(parameters);
 			WriteStreamToBody(request, stream);
 			return GetResponse(request);
+		}
+
+		private HttpWebRequest CreateWebRequest(string parameters)
+		{
+			return (HttpWebRequest) WebRequest.Create(EndPoint + parameters);
 		}
 
 		private void WriteBody(WebRequest request)
