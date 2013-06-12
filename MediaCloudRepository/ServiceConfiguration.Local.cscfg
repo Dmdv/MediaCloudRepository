@@ -3,7 +3,7 @@
   <Role name="MediaRepositoryWebRole">
     <Instances count="1" />
     <ConfigurationSettings>
-      <Setting name="ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=mediaupload;AccountKey=wdW11WiC3An+mBtlmTtpNnArJhls5d6O69c1UybNGIRCzQHzZPA8gMUN1cPlywrijYg7BgAJOTft9YTPAa9djg==" />
+      <Setting name="ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=mediaupload2;AccountKey=V4Mfyy8uENj/QekxinIQuBp5b30Av2L+RGR+lRN225tAr6lqsiS6ZqzkDrFDqvvFOg/RLbWrmC9xRArNLlhCRg==" />
       <Setting name="DeviceTable" value="DeviceTable" />
       <Setting name="UserTable" value="UserTable" />
       <Setting name="MediaTable" value="MediaTable" />

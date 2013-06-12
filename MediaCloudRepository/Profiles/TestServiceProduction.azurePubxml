@@ -1,22 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <AzureCredentials>3-Month Free Trial</AzureCredentials>
+    <AzureCredentials>Бесплатное пробное использование</AzureCredentials>
     <AzureDeleteDeploymentOnFailure>False</AzureDeleteDeploymentOnFailure>
-    <AzureDeploymentLabel>MediaUpload</AzureDeploymentLabel>
+    <AzureDeploymentLabel>mediaupload2</AzureDeploymentLabel>
     <AzureDeploymentReplacementMethod>AutomaticUpgrade</AzureDeploymentReplacementMethod>
     <AzureSlot>Production</AzureSlot>
     <AzureEnableRemoteDesktop>True</AzureEnableRemoteDesktop>
     <AzureEnableWebDeploy>False</AzureEnableWebDeploy>
     <AzureFallbackToDeleteAndRecreateIfUpgradeFails>False</AzureFallbackToDeleteAndRecreateIfUpgradeFails>
-    <AzureHostedServiceLabel>MediaUpload</AzureHostedServiceLabel>
-    <AzureHostedServiceName>mediaupload</AzureHostedServiceName>
+    <AzureHostedServiceLabel>mediaupload2</AzureHostedServiceLabel>
+    <AzureHostedServiceName>mediaupload2</AzureHostedServiceName>
     <AzureEnableIntelliTrace>False</AzureEnableIntelliTrace>
     <AzureEnableProfiling>False</AzureEnableProfiling>
     <AzureServiceConfiguration>Cloud</AzureServiceConfiguration>
     <AzureSolutionConfiguration>Release</AzureSolutionConfiguration>
-    <AzureStorageAccountLabel>MediaUpload</AzureStorageAccountLabel>
-    <AzureStorageAccountName>mediaupload</AzureStorageAccountName>
+    <AzureStorageAccountLabel>mediaupload2</AzureStorageAccountLabel>
+    <AzureStorageAccountName>mediaupload2</AzureStorageAccountName>
     <AzureAppendTimestampToDeploymentLabel>True</AzureAppendTimestampToDeploymentLabel>
   </PropertyGroup>
 </Project>
